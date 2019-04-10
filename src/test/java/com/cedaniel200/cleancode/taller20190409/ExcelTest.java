@@ -1,11 +1,11 @@
-package com.cedaniel200.cleancode.taller;
+package com.cedaniel200.cleancode.taller20190409;
 
 import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.List;
 
-import static com.cedaniel200.cleancode.taller.ExcelReader.of;
+import static com.cedaniel200.cleancode.taller20190409.ExcelReader.of;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
