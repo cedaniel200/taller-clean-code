@@ -24,7 +24,7 @@ public class ExcelReader {
         this.fileName = fileName;
     }
 
-    public static ExcelReader of(String fileName) {
+    public static ExcelReader from(String fileName) {
         return new ExcelReader(fileName);
     }
 
