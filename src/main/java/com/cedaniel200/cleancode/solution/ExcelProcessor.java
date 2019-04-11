@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
+import static com.cedaniel200.cleancode.solution.CellType.getStringValueOfCell;
+
 public class ExcelProcessor {
 
     private static final String PATH = System.getProperty("user.dir") + "//src//test//resources//";
@@ -57,7 +59,7 @@ public class ExcelProcessor {
         row.cellIterator().forEachRemaining(
                 cell -> {
                     String key = getKey(cell);
-                    Optional<String> optionalValue = getValue(cell);
+                    Optional<String> optionalValue = getStringValueOfCell(cell);
                     optionalValue.ifPresent(value -> cells.put(key, value));
                 });
         return cells;
@@ -67,14 +69,4 @@ public class ExcelProcessor {
         return headerRow.getCell(cell.getColumnIndex()).getStringCellValue();
     }
 
-    private static Optional<String> getValue(Cell currentCell) {
-        switch (currentCell.getCellType()) {
-            case Cell.CELL_TYPE_STRING:
-                return Optional.of(currentCell.getStringCellValue());
-            case Cell.CELL_TYPE_NUMERIC:
-                return Optional.of(String.valueOf(currentCell.getNumericCellValue()).replace(".0", ""));
-            default:
-                return Optional.empty();
-        }
-    }
 }
