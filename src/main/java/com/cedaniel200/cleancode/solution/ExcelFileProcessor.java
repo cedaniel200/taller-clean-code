@@ -16,7 +16,7 @@ import static com.cedaniel200.cleancode.solution.CellType.getStringValueOfCell;
 
 public class ExcelFileProcessor {
 
-    private static final String PATH = System.getProperty("user.dir") + "//src//test//resources//";
+    private static final String TEST_RESOURCES_PATH = System.getProperty("user.dir") + "//src//test//resources//";
     private static final String ERROR_MESSAGE = "Failed get rows by sheet name.";
     private static final int HEADER_POSITION = 0;
     private static Row headerRow;
@@ -31,7 +31,7 @@ public class ExcelFileProcessor {
     }
 
     public List<HashMap<String, String>> getRowsBySheetName(String sheetName) throws ExcelException {
-        try (FileInputStream excelFile = new FileInputStream(PATH + excelFileName)) {
+        try (FileInputStream excelFile = new FileInputStream(TEST_RESOURCES_PATH + excelFileName)) {
             return tryGetRowsBySheetName(excelFile, sheetName);
         } catch (Exception e) {
             throw new ExcelException(ERROR_MESSAGE, e);
