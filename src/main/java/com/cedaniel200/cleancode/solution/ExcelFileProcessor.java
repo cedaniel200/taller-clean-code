@@ -14,17 +14,23 @@ import java.util.Optional;
 
 import static com.cedaniel200.cleancode.solution.CellType.getStringValueOfCell;
 
-public class ExcelProcessor {
+public class ExcelFileProcessor {
 
     private static final String PATH = System.getProperty("user.dir") + "//src//test//resources//";
     private static final String ERROR_MESSAGE = "Failed get rows by sheet name.";
     private static final int HEADER_POSITION = 0;
     private static Row headerRow;
+    private String excelFileName;
 
-    private ExcelProcessor() {
+    private ExcelFileProcessor(String excelFileName) {
+        this.excelFileName = excelFileName;
     }
 
-    public static List<HashMap<String, String>> getRowsBySheetName(String excelFileName, String sheetName) throws ExcelException {
+    public static ExcelFileProcessor createExcelFileProcessor(String excelFileName){
+        return new ExcelFileProcessor(excelFileName);
+    }
+
+    public List<HashMap<String, String>> getRowsBySheetName(String sheetName) throws ExcelException {
         try (FileInputStream excelFile = new FileInputStream(PATH + excelFileName)) {
             return tryGetRowsBySheetName(excelFile, sheetName);
         } catch (Exception e) {
