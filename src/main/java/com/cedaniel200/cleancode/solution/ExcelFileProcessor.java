@@ -1,5 +1,7 @@
 package com.cedaniel200.cleancode.solution;
 
+import com.cedaniel200.cleancode.solution.exception.ExcelException;
+import com.cedaniel200.cleancode.solution.parse.CellParser;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -11,7 +13,6 @@ import java.util.*;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import static com.cedaniel200.cleancode.solution.CellType.getStringValueOfCell;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
@@ -21,6 +22,7 @@ public class ExcelFileProcessor {
     private static final String ERROR_MESSAGE = "Failed get rows by sheet name.";
     private static final int HEADER_POSITION = 0;
     private static Row headerRow;
+    private CellParser cellParser;
     private String excelFileName;
 
     private ExcelFileProcessor(String excelFileName) {
@@ -29,6 +31,10 @@ public class ExcelFileProcessor {
 
     public static ExcelFileProcessor createExcelFileProcessor(String excelFileName) {
         return new ExcelFileProcessor(excelFileName);
+    }
+
+    public void setCellParser(CellParser cellParser) {
+        this.cellParser = cellParser;
     }
 
     public List<Map<String, String>> getRowsBySheetName(String sheetName) throws ExcelException {
@@ -59,7 +65,7 @@ public class ExcelFileProcessor {
     @SuppressWarnings("unchecked")
     private Map<String, String> getCellsByRow(Row row) {
         Stream<Cell> cells = toStream(row.cellIterator());
-        return cells.collect(toMap(this::getKey, cell -> getStringValueOfCell(cell).orElse("")));
+        return cells.collect(toMap(this::getKey, cell -> this.cellParser.parseString(cell).orElse("")));
     }
 
     private String getKey(Cell cell) {

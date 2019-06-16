@@ -1,4 +1,4 @@
-package com.cedaniel200.cleancode.solution;
+package com.cedaniel200.cleancode.solution.exception;
 
 import java.io.IOException;
 
