@@ -1,6 +1,6 @@
 package com.cedaniel200.cleancode;
 
-import jdk.internal.jline.internal.Log;
+import jline.internal.Log;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
