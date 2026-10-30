@@ -14,19 +14,21 @@ import static com.cedaniel200.cleancode.solution.ExcelFileProcessor.createExcelF
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class ExcelTest {
 
+    private CellParser cellParser;
     private ExcelFileProcessor excelFileProcessor;
 
     @BeforeEach
     public void setup() {
-        CellParser cellParser = new CellParser();
+        cellParser = new CellParser();
         cellParser.registerCellValueParser(new NumericCellValueParser());
         cellParser.registerCellValueParser(new StringCellValueParser());
 
-        excelFileProcessor = createExcelFileProcessor("Clientes.xlsx");
-        excelFileProcessor.setCellParser(cellParser);
+        excelFileProcessor = excelFileProcessorFor("Clientes.xlsx");
     }
 
     @Test
@@ -50,5 +52,34 @@ public class ExcelTest {
 
         assertThat(data.toString(),
                 is(equalTo("[{clientType=N, idType=1, apellido=5, idNumber=1234}, {clientType=J, idType=3, apellido=perez, idNumber=5678}]")));
+    }
+
+    @Test
+    public void testMustFailWhenSheetDoesNotExist() {
+        assertThrows(ExcelException.class, () -> excelFileProcessor.getRowsBySheetName("HojaQueNoExiste"));
+    }
+
+    @Test
+    public void testMustFailWhenFileDoesNotExist() {
+        ExcelFileProcessor missingFileProcessor = excelFileProcessorFor("NoExiste.xlsx");
+
+        assertThrows(ExcelException.class, () -> missingFileProcessor.getRowsBySheetName("Hoja1"));
+    }
+
+    @Test
+    public void testMustOmitTheCellWhenTheRowHasAnEmptyCell() throws ExcelException {
+        ExcelFileProcessor processorWithEmptyCell = excelFileProcessorFor("ClientesConCeldaVacia.xlsx");
+
+        Map<String, String> cells = processorWithEmptyCell.getRowsBySheetName("Hoja1").get(0);
+
+        // Comportamiento actual: para POI la celda vacía no existe, así que la clave no llega al mapa.
+        assertThat(cells.size(), is(equalTo(3)));
+        assertFalse(cells.containsKey("idType"));
+    }
+
+    private ExcelFileProcessor excelFileProcessorFor(String fileName) {
+        ExcelFileProcessor processor = createExcelFileProcessor(fileName);
+        processor.setCellParser(cellParser);
+        return processor;
     }
 }
