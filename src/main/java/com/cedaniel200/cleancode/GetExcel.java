@@ -1,7 +1,7 @@
 package com.cedaniel200.cleancode;
 
-import jline.internal.Log;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -11,9 +11,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class GetExcel {
 
+    private static final Logger LOGGER = Logger.getLogger(GetExcel.class.getName());
     private static FileInputStream fs; // archivo de excel
 
     private GetExcel(){}
@@ -28,14 +31,14 @@ public class GetExcel {
             Row headerRow = sheet.getRow(0);
             for (int i = 1; i < sheet.getPhysicalNumberOfRows(); i++) {
                 Row currentRow = sheet.getRow(i);
-                HashMap<String, String> currentHash = new HashMap<String, String>();
+                HashMap<String, String> currentHash = new HashMap<>();
                 for (int j = 0; j < currentRow.getPhysicalNumberOfCells(); j++) {
                     Cell currentCell = currentRow.getCell(j);
                     switch (currentCell.getCellType()) {
-                        case Cell.CELL_TYPE_STRING:
+                        case STRING:
                             currentHash.put(headerRow.getCell(j).getStringCellValue(), currentCell.getStringCellValue());
                             break;
-                        case Cell.CELL_TYPE_NUMERIC:
+                        case NUMERIC:
                             currentHash.put(headerRow.getCell(j).getStringCellValue(), String.valueOf(currentCell.getNumericCellValue()).replace(".0", ""));
                             break;
                             // faltan mas tipo por implementar
@@ -46,7 +49,7 @@ public class GetExcel {
                 myData.add(currentHash);
             }
         } catch (Exception e) {
-            Log.error(e);
+            LOGGER.log(Level.SEVERE, "No se pudo leer el archivo " + filepath, e);
         }finally {
             close();
         }
@@ -58,7 +61,7 @@ public class GetExcel {
         try {
             fs.close();
         } catch (IOException e) {
-            Log.error(e);
+            LOGGER.log(Level.SEVERE, "No se pudo cerrar el archivo", e);
         }
     }
 }
