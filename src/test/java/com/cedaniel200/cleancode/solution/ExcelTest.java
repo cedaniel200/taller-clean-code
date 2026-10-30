@@ -4,8 +4,8 @@ import com.cedaniel200.cleancode.solution.exception.ExcelException;
 import com.cedaniel200.cleancode.solution.parse.CellParser;
 import com.cedaniel200.cleancode.solution.parse.NumericCellValueParser;
 import com.cedaniel200.cleancode.solution.parse.StringCellValueParser;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
@@ -19,7 +19,7 @@ public class ExcelTest {
 
     private ExcelFileProcessor excelFileProcessor;
 
-    @Before
+    @BeforeEach
     public void setup() {
         CellParser cellParser = new CellParser();
         cellParser.registerCellValueParser(new NumericCellValueParser());
